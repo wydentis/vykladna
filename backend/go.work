@@ -1,0 +1,8 @@
+go 1.26.4
+
+use (
+    ./shared/utils
+    ./shared/core/transport/http
+    ./shared/core/db
+    ./telegram_bot
+)
