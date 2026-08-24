@@ -48,6 +48,9 @@ func processStruct(v reflect.Value, prefix string) error {
 		}
 
 		tag, hasTag := field.Tag.Lookup("env")
+		if hasTag && tag == "-" {
+			continue
+		}
 
 		underlying := field.Type
 		isPtr := underlying.Kind() == reflect.Pointer

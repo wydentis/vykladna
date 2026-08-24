@@ -3,6 +3,7 @@ package core_pgx_pool
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -15,14 +16,17 @@ type Pool struct {
 }
 
 func NewPool(ctx context.Context, config Config) (*Pool, error) {
-	connectionStream := fmt.Sprintf(
-		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
-		config.User,
-		config.Password,
-		config.Host,
-		config.Port,
-		config.Database,
-	)
+	u := &url.URL{
+		Scheme: "postgres",
+		User:   url.UserPassword(config.User, config.Password),
+		Host:   fmt.Sprintf("%s:%d", config.Host, config.Port),
+		Path:   config.Database,
+	}
+
+	q := u.Query()
+	q.Set("sslmode", "disable")
+	u.RawQuery = q.Encode()
+	connectionStream := u.String()
 
 	pgxConfig, err := pgxpool.ParseConfig(connectionStream)
 	if err != nil {

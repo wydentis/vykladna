@@ -27,10 +27,20 @@ func NewHTTPServer(cfg Config, log *core_logger.Logger, middlewares ...core_http
 	}
 }
 
+func (s *HTTPServer) RegisterAPIVersionRouters(routers []APIVersionRouter) {
+	for _, router := range routers {
+		prefix := "/api/" + string(router.apiVersion)
+		s.mux.Handle(prefix+"/", http.StripPrefix(prefix, router.WithMiddlewares()))
+	}
+}
+
 func (s *HTTPServer) Run(ctx context.Context) error {
+	addr := fmt.Sprintf("%s:%d", s.cfg.Addr, s.cfg.Port)
+	mux := core_http_middleware.Chain(s.mux, s.middlewares...)
+
 	server := &http.Server{
-		Addr:    s.cfg.Addr,
-		Handler: s.mux,
+		Addr:    addr,
+		Handler: mux,
 	}
 
 	ch := make(chan error, 1)

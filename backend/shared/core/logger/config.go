@@ -15,7 +15,7 @@ type Config struct {
 func NewConfig() (Config, error) {
 	var cfg Config
 
-	err := core_utils_env.Process(&cfg, "LOG_")
+	err := core_utils_env.Process(&cfg, "LOG")
 	if err != nil {
 		return Config{}, fmt.Errorf("failed to get logger config: %w", err)
 	}
