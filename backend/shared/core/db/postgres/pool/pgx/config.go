@@ -8,11 +8,11 @@ import (
 )
 
 type Config struct {
-	Host     string        `env:"HOST,required"`
+	Host     string        `env:"HOST,,localhost"`
 	Port     int           `env:"PORT,,5432"`
-	User     string        `env:"USER,required"`
+	User     string        `env:"USER,,main-service"`
 	Password string        `env:"PASSWORD,required"`
-	Database string        `env:"DB,required"`
+	Database string        `env:"DBNAME,,vykladna-main"`
 	Timeout  time.Duration `env:"TIMEOUT,,30s"`
 }
 

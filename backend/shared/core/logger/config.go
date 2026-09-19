@@ -8,8 +8,8 @@ import (
 )
 
 type Config struct {
-	Level    slog.Level `env:"LEVEL,,info"`
-	FilePath string     `env:"FILE_PATH,required"`
+	Level  slog.Level `env:"LEVEL,,info"`
+	Folder string     `env:"FOLDER,,/logs"`
 }
 
 func NewConfig() (Config, error) {

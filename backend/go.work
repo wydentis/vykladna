@@ -2,8 +2,10 @@ go 1.26.4
 
 use (
     ./shared/utils
+    ./shared/core/domains
     ./shared/core/logger
     ./shared/core/transport/http
     ./shared/core/db
+    ./main
     ./telegram_bot
 )
