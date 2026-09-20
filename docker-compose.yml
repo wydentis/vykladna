@@ -1,0 +1,42 @@
+services:
+  main-postgres:
+    image: dhi.io/postgres:18
+    restart: always
+    environment:
+      - POSTGRES_USER=${MAIN_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${MAIN_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${MAIN_POSTGRES_DBNAME}
+    networks:
+      - main-db-net
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata_main:/var/lib/postgresql/18/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${MAIN_POSTGRES_USER} -d ${MAIN_POSTGRES_DBNAME}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  main-postgres-migrate:
+    image: migrate/migrate:v4.15.2
+    user: "${UID}:${GID}"
+    networks:
+      - main-db-net
+    volumes:
+      - ${PROJECT_ROOT}/migrations/main:/migrations
+    depends_on:
+      main-postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata_main:
+    name: main_postgres_data
+
+networks:
+  main-db-net:
+    name: main_postgres_network
