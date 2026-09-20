@@ -1,18 +1,34 @@
 package students_transport_http
 
 import (
+	"fmt"
 	"net/http"
 
 	core_domains "github.com/wydentis/vykladna/shared/core/domains"
 	core_logger "github.com/wydentis/vykladna/shared/core/logger"
 	core_http_request "github.com/wydentis/vykladna/shared/core/transport_http/request"
 	core_http_response "github.com/wydentis/vykladna/shared/core/transport_http/response"
+	utils_validation "github.com/wydentis/vykladna/shared/utils/validation"
 )
 
 type CreateStudentRequest struct {
 	Name        string `json:"name"`
 	Surname     string `json:"surname"`
 	PhoneNumber string `json:"phone_number"`
+}
+
+func (r *CreateStudentRequest) Validate() error {
+	if err := utils_validation.ValidateName(r.Name); err != nil {
+		return fmt.Errorf("'name' validation failed: %w", err)
+	}
+	if err := utils_validation.ValidateSurname(r.Surname); err != nil {
+		return fmt.Errorf("'surname' validation failed: %w", err)
+	}
+	if err := utils_validation.ValidatePhoneNumber(r.PhoneNumber); err != nil {
+		return fmt.Errorf("'phone_number' validation failed: %w", err)
+	}
+
+	return nil
 }
 
 type CreateStudentResponse StudentDTO

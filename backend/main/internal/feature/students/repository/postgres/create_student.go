@@ -14,7 +14,7 @@ func (r *StudentsRepository) CreateStudent(ctx context.Context, student core_dom
 	query := `
 		INSERT INTO students.accounts (name, surname, phone_number)
 		VALUES ($1, $2, $3)
-		RETURNING id, version, name, surname, phone_number, telegram_id
+		RETURNING id, version, name, surname, phone_number, telegram_synced, telegram_id
 	`
 
 	row := r.pool.QueryRow(ctx, query, student.Name, student.Surname, student.PhoneNumber)
@@ -26,6 +26,7 @@ func (r *StudentsRepository) CreateStudent(ctx context.Context, student core_dom
 		&studentModel.Name,
 		&studentModel.Surname,
 		&studentModel.PhoneNumber,
+		&studentModel.TelegramSynced,
 		&studentModel.TelegramID,
 	); err != nil {
 		return core_domains.Student{}, fmt.Errorf("scan error: %w", err)

@@ -9,7 +9,7 @@ import (
 )
 
 type PatchStudentTIDRequest struct {
-	TelegramID *string `json:"telegram_id"`
+	TelegramID int64 `json:"telegram_id"`
 }
 
 type PatchStudentTIDResponse StudentDTO

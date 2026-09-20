@@ -22,7 +22,7 @@ type StudentsService interface {
 	GetStudent(ctx context.Context, id uuid.UUID) (core_domains.Student, error)
 	CreateStudent(ctx context.Context, student core_domains.Student) (core_domains.Student, error)
 	PatchStudent(ctx context.Context, id uuid.UUID, patch core_domains.StudentPatch) (core_domains.Student, error)
-	PatchStudentTID(ctx context.Context, id uuid.UUID, telegramID *string) (core_domains.Student, error)
+	PatchStudentTID(ctx context.Context, id uuid.UUID, telegramID int64) (core_domains.Student, error)
 }
 
 func NewUsersHTTPTransport(usersService StudentsService) *StudentsHTTPTransport {

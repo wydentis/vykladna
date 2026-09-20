@@ -16,9 +16,9 @@ func (r *StudentsRepository) PatchStudent(ctx context.Context, student core_doma
 
 	query := `
 		UPDATE students.accounts
-		SET name = $1, surname = $2, phone_number = $3, telegram_id = $4, version = version + 1
-		WHERE id = $5 AND version = $6
-		RETURNING id, version, name, surname, phone_number, telegram_id;
+		SET name = $1, surname = $2, phone_number = $3, telegram_synced = $4, telegram_id = $5, version = version + 1
+		WHERE id = $6 AND version = $7
+		RETURNING id, version, name, surname, phone_number, telegram_synced, telegram_id;
 	`
 
 	var studentModel StudentModel
@@ -28,6 +28,7 @@ func (r *StudentsRepository) PatchStudent(ctx context.Context, student core_doma
 		student.Name,
 		student.Surname,
 		student.PhoneNumber,
+		student.TelegramSynced,
 		student.TelegramID,
 		student.ID,
 		student.Version,
@@ -39,6 +40,7 @@ func (r *StudentsRepository) PatchStudent(ctx context.Context, student core_doma
 		&studentModel.Name,
 		&studentModel.Surname,
 		&studentModel.PhoneNumber,
+		&studentModel.TelegramSynced,
 		&studentModel.TelegramID,
 	); err != nil {
 		if errors.Is(err, core_postgres_pool.ErrNoRows) {

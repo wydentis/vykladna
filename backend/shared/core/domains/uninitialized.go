@@ -5,7 +5,6 @@ import (
 )
 
 var (
-	UninitializedID         = uuid.Nil
-	UninitializedVersion    = -1
-	UninitializedTelegramID = ""
+	UninitializedID      = uuid.Nil
+	UninitializedVersion = (int64)(-1)
 )

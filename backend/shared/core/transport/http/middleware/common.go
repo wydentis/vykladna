@@ -11,7 +11,6 @@ import (
 
 var (
 	requestIDHeader  = "X-Request-ID"
-	statusCodeHeader = "Status-Code"
 )
 
 func RequestID() Middleware {
