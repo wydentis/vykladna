@@ -50,3 +50,11 @@ func ValidatePhoneNumber(v string) error {
 
 	return nil
 }
+
+func ValidateTelegramID(v int64) error {
+	if v < 100000 || v > 1000000000 {
+		return fmt.Errorf("'telegram id must contains from 6 to 10 digits")
+	}
+
+	return nil
+}

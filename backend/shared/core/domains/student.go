@@ -94,13 +94,13 @@ func NewStudentPatch(
 
 func (s *StudentPatch) Validate() error {
 	if s.Name.Set && s.Name.Value == nil {
-		return fmt.Errorf("'name' name cannot be null")
+		return fmt.Errorf("'name' cannot be null")
 	}
 	if s.Surname.Set && s.Surname.Value == nil {
-		return fmt.Errorf("'surname' name cannot be null")
+		return fmt.Errorf("'surname' cannot be null")
 	}
 	if s.PhoneNumber.Set && s.PhoneNumber.Value == nil {
-		return fmt.Errorf("'phone number' name cannot be null")
+		return fmt.Errorf("'phone number' cannot be null")
 	}
 
 	return nil

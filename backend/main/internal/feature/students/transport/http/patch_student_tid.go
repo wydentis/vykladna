@@ -1,15 +1,25 @@
 package students_transport_http
 
 import (
+	"fmt"
 	"net/http"
 
 	core_logger "github.com/wydentis/vykladna/shared/core/logger"
 	core_http_request "github.com/wydentis/vykladna/shared/core/transport_http/request"
 	core_http_response "github.com/wydentis/vykladna/shared/core/transport_http/response"
+	utils_validation "github.com/wydentis/vykladna/shared/utils/validation"
 )
 
 type PatchStudentTIDRequest struct {
 	TelegramID int64 `json:"telegram_id"`
+}
+
+func (r *PatchStudentTIDRequest) Validate() error {
+	if err := utils_validation.ValidateTelegramID(r.TelegramID); err != nil {
+		return fmt.Errorf("'telegram_id' validation failed: %w", err)
+	}
+
+	return nil
 }
 
 type PatchStudentTIDResponse StudentDTO

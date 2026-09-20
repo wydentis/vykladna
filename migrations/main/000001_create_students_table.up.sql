@@ -6,7 +6,7 @@ CREATE TABLE students.accounts
     version         BIGINT      NOT NULL    DEFAULT 1,
     name            varchar(32) NOT NULL    CHECK (name ~ '^[\u0400-\u042F\u0490][\u0430-\u045F\u0491]{1,31}$'),
     surname         varchar(32) NOT NULL    CHECK (surname ~ '^[\u0400-\u042F\u0490][\u0430-\u045F\u0491]{1,31}$'),
-    phone_number    varchar(15) NOT NULL    CHECK (phone_number ~ '^\+?[0-9]{9,12}$'),
+    phone_number    varchar(15) NOT NULL    CHECK (phone_number ~ '^\+?[0-9]{11,14}$'),
     telegram_synced boolean     NOT NULL    DEFAULT false,
     telegram_id     BIGINT                  
         CHECK ((telegram_synced = FALSE AND telegram_id IS NULL) OR
