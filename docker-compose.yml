@@ -30,7 +30,8 @@ services:
     volumes:
       - ${PROJECT_ROOT}/migrations/main:/migrations
     depends_on:
-      - main-postgres
+      main-postgres:
+        condition: service_healthy
 
 volumes:
   pgdata_main:

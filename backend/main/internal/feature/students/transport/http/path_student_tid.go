@@ -33,7 +33,7 @@ func (h *StudentsHTTPTransport) PatchStudentTID(rw http.ResponseWriter, r *http.
 
 	student, err := h.studentsService.PatchStudentTID(ctx, id, request.TelegramID)
 	if err != nil {
-		responseHandler.ErrorResponse(err, "failed to path student telegram id")
+		responseHandler.ErrorResponse(err, "failed to patch student telegram id")
 		return
 	}
 

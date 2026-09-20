@@ -25,7 +25,7 @@ func GetUUIDPathValue(r *http.Request, key string) (uuid.UUID, error) {
 
 	id, err := uuid.Parse(idString)
 	if err != nil {
-		return uuid.UUID{}, fmt.Errorf("invalid uuid: %w", err)
+		return uuid.UUID{}, fmt.Errorf("invalid uuid: %v: %w", err, core_errors.ErrInvalidArgument)
 	}
 
 	return id, nil

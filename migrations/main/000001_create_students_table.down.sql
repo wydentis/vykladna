@@ -1,2 +1,2 @@
-DROP TABLE students.account;
+DROP TABLE students.accounts;
 DROP SCHEMA students;

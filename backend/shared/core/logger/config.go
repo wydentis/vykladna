@@ -9,7 +9,7 @@ import (
 
 type Config struct {
 	Level  slog.Level `env:"LEVEL,,info"`
-	Folder string     `env:"FOLDER,,/logs"`
+	Folder string     `env:"FOLDER,,./logs"`
 }
 
 func NewConfig() (Config, error) {

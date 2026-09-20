@@ -51,6 +51,9 @@ func (h *HTTPResponseHandler) ErrorResponse(err error, msg string) {
 	case errors.Is(err, core_errors.ErrNotFound):
 		statusCode = http.StatusNotFound
 		logFunc = h.log.Debug
+	case errors.Is(err, core_errors.ErrConflict):
+		statusCode = http.StatusConflict
+		logFunc = h.log.Warn
 	default:
 		statusCode = http.StatusInternalServerError
 		logFunc = h.log.Error
@@ -61,9 +64,18 @@ func (h *HTTPResponseHandler) ErrorResponse(err error, msg string) {
 }
 
 func (h *HTTPResponseHandler) errorResponse(err error, statusCode int, msg string) {
-	response := map[string]string{
-		"message": msg,
-		"error":   err.Error(),
+	var response map[string]string
+
+	if statusCode >= 500 {
+		response = map[string]string{
+			"message": msg,
+			"error":   "internal server error",
+		}
+	} else {
+		response = map[string]string{
+			"message": msg,
+			"error":   err.Error(),
+		}
 	}
 
 	h.JSONResponse(response, statusCode)

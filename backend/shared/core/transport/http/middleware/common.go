@@ -59,7 +59,7 @@ func Trace() Middleware {
 		return http.HandlerFunc(
 			func(w http.ResponseWriter, r *http.Request) {
 				log := core_logger.FromContext(r.Context())
-
+				rec := core_http_response.NewStatusRecorder(w)
 				before := time.Now()
 
 				log.Debug(
@@ -67,7 +67,7 @@ func Trace() Middleware {
 					"timestamp", before.UTC(),
 				)
 
-				h.ServeHTTP(w, r)
+				h.ServeHTTP(rec, r)
 
 				now := time.Now()
 
@@ -75,7 +75,7 @@ func Trace() Middleware {
 					"<- done http request",
 					"timestamp", now.UTC(),
 					"latency", now.Sub(before),
-					"status_code", w.Header().Get(statusCodeHeader),
+					"status_code", rec.StatusCode,
 				)
 			},
 		)
