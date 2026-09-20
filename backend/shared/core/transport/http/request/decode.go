@@ -14,7 +14,7 @@ var (
 )
 
 func DecodeAndValidateRequest(r *http.Request, dest any) error {
-	if err := json.NewDecoder(r.Body).Decode(&dest); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(dest); err != nil {
 		return fmt.Errorf("decode json: %v: %w", err, core_errors.ErrInvalidArgument)
 	}
 

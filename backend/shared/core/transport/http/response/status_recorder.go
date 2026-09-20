@@ -37,3 +37,7 @@ func (w *StatusRecorder) Write(b []byte) (int, error) {
 
 	return w.ResponseWriter.Write(b)
 }
+
+func (w *StatusRecorder) Unwrap() http.ResponseWriter {
+	return w.ResponseWriter
+}

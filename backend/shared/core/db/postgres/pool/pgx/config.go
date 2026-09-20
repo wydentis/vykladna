@@ -10,9 +10,9 @@ import (
 type Config struct {
 	Host     string        `env:"HOST,,localhost"`
 	Port     int           `env:"PORT,,5432"`
-	User     string        `env:"USER,,main-service"`
+	User     string        `env:"USER,required"`
 	Password string        `env:"PASSWORD,required"`
-	Database string        `env:"DBNAME,,vykladna-main"`
+	Database string        `env:"DBNAME,required"`
 	Timeout  time.Duration `env:"TIMEOUT,,30s"`
 }
 
