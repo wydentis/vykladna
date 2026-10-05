@@ -46,6 +46,11 @@ func (m TextMessage) Command() (name, botUsername, args string, ok bool) {
 	return name, botUsername, strings.TrimSpace(m.Text[e.Length:]), true
 }
 
+func (m TextMessage) IsCommand() bool {
+	name, _, _, ok := m.Command()
+	return (ok && name != "")
+}
+
 type PhotoSize struct {
 	FileID       string `json:"file_id"`
 	FileUniqueID string `json:"file_unique_id"`

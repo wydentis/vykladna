@@ -64,7 +64,7 @@ migrate-action:
 tgbot-set-webhook:
 	@curl -X POST "https://api.telegram.org/bot$(TGBOT_TOKEN)/setWebhook" \
 		-H "Content-Type: application/json" \
-		-d '{"url": "$(BASE_URL)/api/telegram/webhook"}'
+		-d '{"url": "$(BASE_URL)/api/telegram/webhook", "secret_token": "$(TGBOT_SERVER_WEBHOOK_SECRET)"}'
 
 tgbot-webhook-info:
 	@curl -X GET "https://api.telegram.org/bot$(TGBOT_TOKEN)/getWebhookInfo"
@@ -89,7 +89,7 @@ generate-envs:
 	@rm -f $(PROJECT_ROOT)/backend/tgbot/.env
 	@add() { [ -n "$$2" ] && echo "$$1=$$2" >> $(PROJECT_ROOT)/backend/tgbot/.env || true; }; \
 	add TGBOT_CLIENT_BOT_TOKEN "$(TGBOT_TOKEN)"; \
-	add TGBOT_CLIENT_APIURL "$(TGBOT_APIURL)"; \
+	add TGBOT_CLIENT_API_URL "$(TGBOT_API_URL)"; \
 	add TGBOT_CLIENT_TIMEOUT "$(TGBOT_CLIENT_TIMEOUT)"; \
 	add TGBOT_SERVER_WEBHOOK_SECRET "$(TGBOT_SERVER_WEBHOOK_SECRET)"; \
 	add TGBOT_SERVER_WORKERS "$(TGBOT_SERVER_WORKERS)"; \

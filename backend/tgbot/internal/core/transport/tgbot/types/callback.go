@@ -8,7 +8,7 @@ type CallbackQuery struct {
 }
 
 func (c CallbackQuery) ChatID() int64 {
-	if c.Message == nil {
+	if c.Message != nil {
 		return c.Message.Chat.ID
 	}
 	return c.From.ID
