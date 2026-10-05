@@ -61,6 +61,17 @@ migrate-action:
 		-database postgres://$$USER:$$PASS@$$HOST:5432/$$DBNAME?sslmode=disable \
 		$(action)
 
+tgbot-set-webhook:
+	@curl -X POST "https://api.telegram.org/bot$(TGBOT_TOKEN)/setWebhook" \
+		-H "Content-Type: application/json" \
+		-d '{"url": "$(BASE_URL)/api/telegram/webhook", "secret_token": "$(TGBOT_SERVER_WEBHOOK_SECRET)"}'
+
+tgbot-webhook-info:
+	@curl -X GET "https://api.telegram.org/bot$(TGBOT_TOKEN)/getWebhookInfo"
+
+tgbot-delete-webhook:
+	@curl -X POST "https://api.telegram.org/bot$(TGBOT_TOKEN)/deleteWebhook" 
+
 generate-envs:
 	@rm -f $(PROJECT_ROOT)/backend/main/.env
 	@add() { [ -n "$$2" ] && echo "$$1=$$2" >> $(PROJECT_ROOT)/backend/main/.env || true; }; \
@@ -75,8 +86,26 @@ generate-envs:
 	add HTTP_SERVER_ADDR "$(MAIN_APP_HTTP_ADDR)"; \
 	add HTTP_SERVER_PORT "$(MAIN_APP_HTTP_PORT)"; \
 	add HTTP_SERVER_SHUTDOWN_TIMEOUT "$(MAIN_APP_HTTP_SHUTDOWN_TIMEOUT)"
+	@rm -f $(PROJECT_ROOT)/backend/tgbot/.env
+	@add() { [ -n "$$2" ] && echo "$$1=$$2" >> $(PROJECT_ROOT)/backend/tgbot/.env || true; }; \
+	add TGBOT_CLIENT_BOT_TOKEN "$(TGBOT_TOKEN)"; \
+	add TGBOT_CLIENT_API_URL "$(TGBOT_API_URL)"; \
+	add TGBOT_CLIENT_TIMEOUT "$(TGBOT_CLIENT_TIMEOUT)"; \
+	add TGBOT_SERVER_WEBHOOK_SECRET "$(TGBOT_SERVER_WEBHOOK_SECRET)"; \
+	add TGBOT_SERVER_WORKERS "$(TGBOT_SERVER_WORKERS)"; \
+	add TGBOT_SERVER_QUEUE_SIZE "$(TGBOT_SERVER_QUEUE_SIZE)"; \
+	add LOG_LEVEL "$(TGBOT_LOG_LEVEL)"; \
+	add LOG_FOLDER "$(TGBOT_LOG_FOLDER)"; \
+	add HTTP_SERVER_ADDR "$(TGBOT_SERVER_HTTP_ADDR)"; \
+	add HTTP_SERVER_PORT "$(TGBOT_SERVER_HTTP_PORT)"; \
+	add HTTP_SERVER_SHUTDOWN_TIMEOUT "$(TGBOT_SERVER_HTTP_SHUTDOWN_TIMEOUT)"
 
 run-main: generate-envs
 	@cd $(PROJECT_ROOT)/backend/main && \
 	set -a; . ./.env; set +a; \
 	go run ./cmd/main/main.go
+
+run-tgbot-server: generate-envs
+	@cd $(PROJECT_ROOT)/backend/tgbot && \
+	set -a; . ./.env; set +a; \
+	go run ./cmd/tgbot/main.go
