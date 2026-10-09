@@ -30,15 +30,11 @@ func (t *EchoTransport) Routes() []core_tgbot_server.Route {
 }
 
 func (t *EchoTransport) OnText(ctx context.Context, m core_tgbot_types.TextMessage) error {
-	if m.IsCommand() && m.Text == "/start" {
-		return t.client.SendMessage(ctx, core_tgbot_client.SendMessageParams{
-			ChatID:   m.ChatID(),
-			ThreadID: m.MessageThreadID,
-			Text:     "Hi! Your chat id: " + fmt.Sprint(m.ChatID()),
-		})
-	}
-
-	return nil
+	return t.client.SendMessage(ctx, core_tgbot_client.SendMessageParams{
+		ChatID:   m.ChatID(),
+		ThreadID: m.MessageThreadID,
+		Text:     "Hi! Your chat id: " + fmt.Sprint(m.ChatID()) + " " + m.Text,
+	})
 }
 
 func (t *EchoTransport) OnCallback(ctx context.Context, c core_tgbot_types.CallbackQuery) error {

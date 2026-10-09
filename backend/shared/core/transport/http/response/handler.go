@@ -22,8 +22,20 @@ func NewHTTPResponseHandler(rw http.ResponseWriter, log *core_logger.Logger) *HT
 	}
 }
 
+func (h *HTTPResponseHandler) SetCookie(c *http.Cookie) {
+	http.SetCookie(h.rw, c)
+}
+
+func (h *HTTPResponseHandler) SetHeader(key, value string) {
+	h.rw.Header().Set(key, value)
+}
+
+func (h *HTTPResponseHandler) NoStore() {
+	h.SetHeader("Cache-control", "no-store")
+}
+
 func (h *HTTPResponseHandler) JSONResponse(responseBody any, statusCode int) {
-	h.rw.Header().Set("content-type", "application/json")
+	h.SetHeader("content-type", "application/json")
 	h.rw.WriteHeader(statusCode)
 
 	if err := json.NewEncoder(h.rw).Encode(responseBody); err != nil {
@@ -36,6 +48,10 @@ func (h *HTTPResponseHandler) PanicResponse(p any, msg string) {
 
 	h.log.Error(msg, "err", err)
 	h.errorResponse(err, http.StatusInternalServerError, msg)
+}
+
+func (h *HTTPResponseHandler) NoContentResponse() {
+	h.rw.WriteHeader(http.StatusNoContent)
 }
 
 func (h *HTTPResponseHandler) ErrorResponse(err error, msg string) {
@@ -54,6 +70,9 @@ func (h *HTTPResponseHandler) ErrorResponse(err error, msg string) {
 	case errors.Is(err, core_errors.ErrConflict):
 		statusCode = http.StatusConflict
 		logFunc = h.log.Warn
+	case errors.Is(err, core_errors.ErrUnauthorized):
+		statusCode = http.StatusUnauthorized
+		logFunc = h.log.Debug
 	default:
 		statusCode = http.StatusInternalServerError
 		logFunc = h.log.Error
@@ -70,6 +89,11 @@ func (h *HTTPResponseHandler) errorResponse(err error, statusCode int, msg strin
 		response = map[string]string{
 			"message": msg,
 			"error":   "internal server error",
+		}
+	} else if statusCode == http.StatusUnauthorized {
+		response = map[string]string{
+			"message": msg,
+			"error":   "unauthorized",
 		}
 	} else {
 		response = map[string]string{

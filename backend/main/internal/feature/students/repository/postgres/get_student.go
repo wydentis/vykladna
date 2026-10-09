@@ -16,7 +16,7 @@ func (r *StudentsRepository) GetStudent(ctx context.Context, id uuid.UUID) (core
 	defer cancel()
 
 	query := `
-		SELECT id, version, name, surname, phone_number, telegram_synced, telegram_id
+		SELECT id, version, name, surname, phone_number, telegram_synced, telegram_id, owner_user_id
 		FROM students.accounts
 		WHERE id=$1
 	`
@@ -33,6 +33,7 @@ func (r *StudentsRepository) GetStudent(ctx context.Context, id uuid.UUID) (core
 		&model.PhoneNumber,
 		&model.TelegramSynced,
 		&model.TelegramID,
+		&model.OwnerUserID,
 	)
 
 	if err != nil {

@@ -14,6 +14,8 @@ type StudentModel struct {
 	PhoneNumber    string
 	TelegramSynced bool
 	TelegramID     *int64
+
+	OwnerUserID uuid.UUID
 }
 
 func studentDomainFromModel(model StudentModel) core_domains.Student {
@@ -25,5 +27,15 @@ func studentDomainFromModel(model StudentModel) core_domains.Student {
 		PhoneNumber:    model.PhoneNumber,
 		TelegramSynced: model.TelegramSynced,
 		TelegramID:     model.TelegramID,
+		OwnerUserID:    model.OwnerUserID,
 	}
+}
+
+func studentDomainsFromModels(models []StudentModel) []core_domains.Student {
+	domains := make([]core_domains.Student, len(models))
+	for i, v := range models {
+		domains[i] = studentDomainFromModel(v)
+	}
+
+	return domains
 }
