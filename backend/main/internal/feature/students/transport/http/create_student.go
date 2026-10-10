@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/google/uuid"
 	core_domains "github.com/wydentis/vykladna/shared/core/domains"
 	core_logger "github.com/wydentis/vykladna/shared/core/logger"
 	core_http_request "github.com/wydentis/vykladna/shared/core/transport_http/request"
@@ -12,9 +13,10 @@ import (
 )
 
 type CreateStudentRequest struct {
-	Name        string `json:"name"`
-	Surname     string `json:"surname"`
-	PhoneNumber string `json:"phone_number"`
+	Name        string    `json:"name"`
+	Surname     string    `json:"surname"`
+	PhoneNumber string    `json:"phone_number"`
+	OwnerUserID uuid.UUID `json:"owner_user_id"`
 }
 
 func (r *CreateStudentRequest) Validate() error {
@@ -48,6 +50,7 @@ func (h *StudentsHTTPTransport) CreateStudent(rw http.ResponseWriter, r *http.Re
 		request.Name,
 		request.Surname,
 		request.PhoneNumber,
+		request.OwnerUserID,
 	)
 
 	studentDomain, err := h.studentsService.CreateStudent(ctx, studentDomain)

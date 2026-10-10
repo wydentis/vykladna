@@ -16,6 +16,8 @@ type Student struct {
 	PhoneNumber    string
 	TelegramSynced bool
 	TelegramID     *int64
+
+	OwnerUserID uuid.UUID
 }
 
 func NewStudent(
@@ -26,6 +28,7 @@ func NewStudent(
 	PhoneNumber string,
 	TelegramSynced bool,
 	TelegramID *int64,
+	OwnerUserID uuid.UUID,
 ) Student {
 	return Student{
 		ID:             ID,
@@ -35,6 +38,7 @@ func NewStudent(
 		PhoneNumber:    PhoneNumber,
 		TelegramSynced: TelegramSynced,
 		TelegramID:     TelegramID,
+		OwnerUserID:    OwnerUserID,
 	}
 }
 
@@ -42,6 +46,7 @@ func NewStudentUninitialized(
 	Name string,
 	Surname string,
 	PhoneNumber string,
+	OwnerUserID uuid.UUID,
 ) Student {
 	return NewStudent(
 		UninitializedID,
@@ -51,6 +56,7 @@ func NewStudentUninitialized(
 		PhoneNumber,
 		false,
 		nil,
+		OwnerUserID,
 	)
 }
 
@@ -64,6 +70,10 @@ func (s *Student) Validate() error {
 		subErr = err
 	}
 	if err := utils_validation.ValidatePhoneNumber(s.PhoneNumber); err != nil {
+		subErr = err
+	}
+
+	if err := utils_validation.ValidateID(s.OwnerUserID); err != nil {
 		subErr = err
 	}
 

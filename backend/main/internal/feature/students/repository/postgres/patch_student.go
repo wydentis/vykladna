@@ -16,9 +16,9 @@ func (r *StudentsRepository) PatchStudent(ctx context.Context, student core_doma
 
 	query := `
 		UPDATE students.accounts
-		SET name = $1, surname = $2, phone_number = $3, telegram_synced = $4, telegram_id = $5, version = version + 1
-		WHERE id = $6 AND version = $7
-		RETURNING id, version, name, surname, phone_number, telegram_synced, telegram_id;
+		SET name = $1, surname = $2, phone_number = $3, telegram_synced = $4, telegram_id = $5, owner_user_id = $6, version = version + 1
+		WHERE id = $7 AND version = $8
+		RETURNING id, version, name, surname, phone_number, telegram_synced, telegram_id, owner_user_id;
 	`
 
 	var studentModel StudentModel
@@ -30,6 +30,7 @@ func (r *StudentsRepository) PatchStudent(ctx context.Context, student core_doma
 		student.PhoneNumber,
 		student.TelegramSynced,
 		student.TelegramID,
+		student.OwnerUserID,
 		student.ID,
 		student.Version,
 	)
@@ -42,6 +43,7 @@ func (r *StudentsRepository) PatchStudent(ctx context.Context, student core_doma
 		&studentModel.PhoneNumber,
 		&studentModel.TelegramSynced,
 		&studentModel.TelegramID,
+		&studentModel.OwnerUserID,
 	); err != nil {
 		if errors.Is(err, core_postgres_pool.ErrNoRows) {
 			return core_domains.Student{}, fmt.Errorf("user with id = %s concurrently accessed: %w", &student.ID, core_errors.ErrConflict)

@@ -12,12 +12,12 @@ func (r *StudentsRepository) CreateStudent(ctx context.Context, student core_dom
 	defer cancel()
 
 	query := `
-		INSERT INTO students.accounts (name, surname, phone_number)
-		VALUES ($1, $2, $3)
-		RETURNING id, version, name, surname, phone_number, telegram_synced, telegram_id
+		INSERT INTO students.accounts (name, surname, phone_number, owner_user_id)
+		VALUES ($1, $2, $3, $4)
+		RETURNING id, version, name, surname, phone_number, telegram_synced, telegram_id, owner_user_id
 	`
 
-	row := r.pool.QueryRow(ctx, query, student.Name, student.Surname, student.PhoneNumber)
+	row := r.pool.QueryRow(ctx, query, student.Name, student.Surname, student.PhoneNumber, student.OwnerUserID)
 
 	var studentModel StudentModel
 	if err := row.Scan(
@@ -28,6 +28,7 @@ func (r *StudentsRepository) CreateStudent(ctx context.Context, student core_dom
 		&studentModel.PhoneNumber,
 		&studentModel.TelegramSynced,
 		&studentModel.TelegramID,
+		&studentModel.OwnerUserID,
 	); err != nil {
 		return core_domains.Student{}, fmt.Errorf("scan error: %w", err)
 	}

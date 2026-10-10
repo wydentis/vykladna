@@ -5,6 +5,7 @@ import (
 )
 
 var (
-	UninitializedID      = uuid.Nil
-	UninitializedVersion = (int64)(-1)
+	UninitializedID       = uuid.Nil
+	UninitializedVersion  = (int64)(-1)
+	UninitializedPassword = ""
 )
