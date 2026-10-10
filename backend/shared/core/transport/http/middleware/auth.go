@@ -38,6 +38,7 @@ func Auth(authManager core_auth.Manager) Middleware {
 				token, ok := bearerToken(r)
 				if !ok {
 					responseHandler.ErrorResponse(fmt.Errorf("%s: %w", "invalid bearer token", core_errors.ErrUnauthorized), "invalid token format")
+					return
 				}
 
 				claims, err := authManager.ParseAccess(token)

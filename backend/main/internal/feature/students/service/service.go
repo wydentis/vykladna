@@ -13,6 +13,8 @@ type StudentsService struct {
 
 type StudentsRepository interface {
 	GetStudent(ctx context.Context, id uuid.UUID) (core_domains.Student, error)
+	GetStudents(ctx context.Context) ([]core_domains.Student, error)
+	GetStudentsByOwnerID(ctx context.Context, id uuid.UUID) ([]core_domains.Student, error)
 	CreateStudent(ctx context.Context, student core_domains.Student) (core_domains.Student, error)
 	PatchStudent(ctx context.Context, student core_domains.Student) (core_domains.Student, error)
 }

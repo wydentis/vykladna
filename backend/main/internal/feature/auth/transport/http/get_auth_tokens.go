@@ -44,7 +44,7 @@ func (h *AuthTransportHTTP) GetAuthTokens(rw http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	c := newRefreshCookie(tokens.Refresh, 7*24*60*60)
+	c := newRefreshCookie(tokens.Refresh, int(h.authManager.RefreshTTL))
 	responseHandler.SetCookie(c)
 	responseHandler.NoStore()
 

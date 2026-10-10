@@ -16,6 +16,7 @@ var (
 
 type AuthTransportHTTP struct {
 	authService AuthService
+	authManager *core_auth.Manager
 }
 
 type AuthService interface {
@@ -23,9 +24,10 @@ type AuthService interface {
 	GetAuthTokens(ctx context.Context, username, password string) (core_auth.Tokens, error)
 }
 
-func NewAuthTransportHTTP(authService AuthService) *AuthTransportHTTP {
+func NewAuthTransportHTTP(authService AuthService, authManager *core_auth.Manager) *AuthTransportHTTP {
 	return &AuthTransportHTTP{
 		authService: authService,
+		authManager: authManager,
 	}
 }
 

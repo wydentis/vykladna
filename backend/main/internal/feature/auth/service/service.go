@@ -18,9 +18,9 @@ type UsersReader interface {
 	GetUserByUsername(ctx context.Context, username string) (core_domains.User, error)
 }
 
-func NewAuthService(usersReader UsersReader, authManager core_auth.Manager) *AuthService {
+func NewAuthService(usersReader UsersReader, authManager *core_auth.Manager) *AuthService {
 	return &AuthService{
 		usersReader: usersReader,
-		authManager: &authManager,
+		authManager: authManager,
 	}
 }

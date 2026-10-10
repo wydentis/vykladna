@@ -50,8 +50,8 @@ func main() {
 	usersService := users_service.NewUsersService(usersRepository)
 	usersTransportHTTP := users_transport_http.NewUsersHTTPTransport(usersService)
 
-	authService := auth_service.NewAuthService(usersRepository, *authManager)
-	authTransportHTTP := auth_transport_http.NewAuthTransportHTTP(authService)
+	authService := auth_service.NewAuthService(usersRepository, authManager)
+	authTransportHTTP := auth_transport_http.NewAuthTransportHTTP(authService, authManager)
 
 	apiRouterV1 := core_http_server.NewAPIVersionRouter(core_http_server.APIVersion1)
 	apiRouterV1.RegisterRoutes(studentsTransportHTTP.Routes()...)

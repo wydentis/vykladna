@@ -14,6 +14,8 @@ type StudentDTO struct {
 	PhoneNumber    string `json:"phone_number"`
 	TelegramSynced bool   `json:"telegram_synced"`
 	TelegramID     *int64 `json:"telegram_id"`
+
+	OwnerUserID uuid.UUID `json:"owner_user_id"`
 }
 
 func studentDTOFromDomain(student core_domains.Student) StudentDTO {
@@ -25,5 +27,15 @@ func studentDTOFromDomain(student core_domains.Student) StudentDTO {
 		PhoneNumber:    student.PhoneNumber,
 		TelegramSynced: student.TelegramSynced,
 		TelegramID:     student.TelegramID,
+		OwnerUserID:    student.OwnerUserID,
 	}
+}
+
+func studentDTOsFromDomains(students []core_domains.Student) []StudentDTO {
+	dtos := make([]StudentDTO, len(students))
+	for i, v := range students {
+		dtos[i] = studentDTOFromDomain(v)
+	}
+
+	return dtos
 }

@@ -16,16 +16,16 @@ const (
 type Manager struct {
 	secret     []byte
 	issuer     string
-	accessTTL  time.Duration
-	refreshTTL time.Duration
+	AccessTTL  time.Duration
+	RefreshTTL time.Duration
 }
 
 func NewManager(config Config) *Manager {
 	return &Manager{
 		secret:     []byte(config.Secret),
 		issuer:     config.Issuer,
-		accessTTL:  config.AccessTTL,
-		refreshTTL: config.RefreshTTL,
+		AccessTTL:  config.AccessTTL,
+		RefreshTTL: config.RefreshTTL,
 	}
 }
 
@@ -68,11 +68,11 @@ func (m *Manager) parse(tok, aud string) (*Claims, error) {
 }
 
 func (m *Manager) IssueAccess(userID uuid.UUID, role string) (string, error) {
-	return m.sign(userID, role, audAccess, m.accessTTL)
+	return m.sign(userID, role, audAccess, m.AccessTTL)
 }
 
 func (m *Manager) IssueRefresh(userID uuid.UUID) (string, error) {
-	return m.sign(userID, "", audRefresh, m.refreshTTL)
+	return m.sign(userID, "", audRefresh, m.RefreshTTL)
 }
 
 func (m *Manager) ParseAccess(tok string) (*Claims, error) {
