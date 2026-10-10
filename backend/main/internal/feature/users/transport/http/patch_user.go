@@ -1,9 +1,10 @@
-package students_transport_http
+package users_transport_http
 
 import (
 	"fmt"
 	"net/http"
 
+	core_auth "github.com/wydentis/vykladna/shared/core/auth"
 	core_domains "github.com/wydentis/vykladna/shared/core/domains"
 	core_logger "github.com/wydentis/vykladna/shared/core/logger"
 	core_http_request "github.com/wydentis/vykladna/shared/core/transport_http/request"
@@ -12,13 +13,12 @@ import (
 	utils_validation "github.com/wydentis/vykladna/shared/utils/validation"
 )
 
-type PatchStudentRequest struct {
-	Name        core_http_types.Nullable[string] `json:"name"`
-	Surname     core_http_types.Nullable[string] `json:"surname"`
-	PhoneNumber core_http_types.Nullable[string] `json:"phone_number"`
+type PatchUserRequest struct {
+	Name    core_http_types.Nullable[string] `json:"name"`
+	Surname core_http_types.Nullable[string] `json:"surname"`
 }
 
-func (r *PatchStudentRequest) Validate() error {
+func (r *PatchUserRequest) Validate() error {
 	if r.Name.Set {
 		if r.Name.Value == nil {
 			return fmt.Errorf("'name' cannot be null")
@@ -35,53 +35,39 @@ func (r *PatchStudentRequest) Validate() error {
 			return fmt.Errorf("'surname' validation failed: %w", err)
 		}
 	}
-	if r.PhoneNumber.Set {
-		if r.PhoneNumber.Value == nil {
-			return fmt.Errorf("'phone_number' cannot be null")
-		}
-		if err := utils_validation.ValidatePhoneNumber(*r.PhoneNumber.Value); err != nil {
-			return fmt.Errorf("'phone_number' validation failed: %w", err)
-		}
-	}
 
 	return nil
 }
 
-type PatchStudentResponse StudentDTO
+type PatchUserResponse UserDTO
 
-func (h *StudentsHTTPTransport) PatchStudent(rw http.ResponseWriter, r *http.Request) {
+func (h *UsersHTTPTransport) PatchUser(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	logger := core_logger.FromContext(ctx)
-	responseHandler := core_http_response.NewHTTPResponseHandler(rw, logger)
+	log := core_logger.FromContext(ctx)
+	responseHandler := core_http_response.NewHTTPResponseHandler(rw, log)
 
-	id, err := core_http_request.GetUUIDPathValue(r, idPathValueKey)
-	if err != nil {
-		responseHandler.ErrorResponse(err, "failed to get id from path")
-		return
-	}
-
-	var request PatchStudentRequest
+	var request PatchUserRequest
 	if err := core_http_request.DecodeAndValidateRequest(r, &request); err != nil {
 		responseHandler.ErrorResponse(err, "failed to decode and validate request")
 		return
 	}
 
+	userInfo := core_auth.FromContext(ctx)
 	patch := userPatchFromRequest(request)
 
-	student, err := h.studentsService.PatchStudent(ctx, id, patch)
+	user, err := h.usersService.PatchUser(ctx, userInfo.ID, patch)
 	if err != nil {
 		responseHandler.ErrorResponse(err, "failed to patch user")
 		return
 	}
 
-	response := PatchStudentResponse(studentDTOFromDomain(student))
+	response := PatchUserResponse(userDTOFromDomain(user))
 	responseHandler.JSONResponse(response, http.StatusOK)
 }
 
-func userPatchFromRequest(request PatchStudentRequest) core_domains.StudentPatch {
-	return core_domains.NewStudentPatch(
+func userPatchFromRequest(request PatchUserRequest) core_domains.UserPatch {
+	return core_domains.NewUserPatch(
 		request.Name.ToDomain(),
 		request.Surname.ToDomain(),
-		request.PhoneNumber.ToDomain(),
 	)
 }

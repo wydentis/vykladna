@@ -15,6 +15,7 @@ type UsersRepository interface {
 	GetUserByID(ctx context.Context, id uuid.UUID) (core_domains.User, error)
 	GetUserByUsername(ctx context.Context, username string) (core_domains.User, error)
 	CreateUser(ctx context.Context, user core_domains.User) (core_domains.User, error)
+	PatchUser(ctx context.Context, user core_domains.User) (core_domains.User, error)
 }
 
 func NewUsersService(usersRepository UsersRepository) *UsersService {

@@ -106,3 +106,45 @@ func (u *User) Validate() error {
 
 	return nil
 }
+
+type UserPatch struct {
+	Name    Nullable[string]
+	Surname Nullable[string]
+}
+
+func NewUserPatch(Name Nullable[string], Surname Nullable[string]) UserPatch {
+	return UserPatch{
+		Name:    Name,
+		Surname: Surname,
+	}
+}
+
+func (u *UserPatch) Validate() error {
+	if u.Name.Set && u.Name.Value == nil {
+		return fmt.Errorf("'name' cannot be null")
+	}
+	if u.Surname.Set && u.Surname.Value == nil {
+		return fmt.Errorf("'surname' cannot be null")
+	}
+
+	return nil
+}
+
+func (u *User) ApplyPatch(patch UserPatch) error {
+	if err := patch.Validate(); err != nil {
+		return fmt.Errorf("validate student patch: %w", err)
+	}
+
+	tmp := *u
+
+	if patch.Name.Set {
+		tmp.Name = *patch.Name.Value
+	}
+	if patch.Surname.Set {
+		tmp.Surname = *patch.Surname.Value
+	}
+
+	*u = tmp
+
+	return u.Validate()
+}

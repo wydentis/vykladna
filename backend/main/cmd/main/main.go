@@ -48,7 +48,7 @@ func main() {
 
 	usersRepository := users_postgres_repository.NewUsersRepository(pool)
 	usersService := users_service.NewUsersService(usersRepository)
-	usersTransportHTTP := users_transport_http.NewUsersHTTPTransport(usersService)
+	usersTransportHTTP := users_transport_http.NewUsersHTTPTransport(usersService, authManager)
 
 	authService := auth_service.NewAuthService(usersRepository, authManager)
 	authTransportHTTP := auth_transport_http.NewAuthTransportHTTP(authService, authManager)
